@@ -30,3 +30,5 @@ hs_err_pid*
 /config/docker-compose/*.yml
 /.env
 /dist
+/config/variables/cmd-env.json
+/config/variables/env.json

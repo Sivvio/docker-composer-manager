@@ -2,10 +2,10 @@
   "name": "docker-composer-manager",
   "version": "1.0.0",
   "description": "",
-  "main": "src/app.js",
+  "main": "dis/src/app.js",
   "scripts": {
     "build": "tsc",
-    "start": "npm run build && node dist/app.js"
+    "start": "npm run build && node dist/src/app.js"
   },
   "author": "Silvio Piccolo",
   "license": "ISC",

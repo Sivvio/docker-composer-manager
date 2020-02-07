@@ -1,8 +1,8 @@
 import * as fs from 'fs-extra';
 import {ApplicationStatus} from "../models/application-status";
-import * as dotenv from 'dotenv';
 import {Util} from '../util/util';
-
+import dockerEnv from '../../config/variables/env.json'; 
+import cmdEnv from '../../config/variables/cmd-env.json'; 
 
 export class ConfigInit {
 
@@ -17,19 +17,22 @@ export class ConfigInit {
         }
         fs.mkdirSync(this.applicationStatus.config.tempFolder);
 
-        this.applicationStatus.config.environmentVariables = this.buildConfigVariables();
+        this.applicationStatus.config.environmentVariables = this.buildEnvironmentVariables();
         this.createTempDockerFiles();
         this.applicationStatus.config.commandsList = this.createDockerCommand();
     }
 
-    /**
-     * reads the variables from the env file and adds dynamic ones too
-     */
-    buildConfigVariables(): any {
-        const env = dotenv.config().parsed;
-        env['HOSTNAME'] = Util.executeBashCommand('hostname').replace('\n', '');
-        env['LOCAL_DOCKER_HOST'] = Util.executeBashCommand('hostname -I | awk \'{print $1}\'').replace('\n', '');
-        return env;
+    private buildEnvironmentVariables(): Object {
+       return Object.assign(dockerEnv, this.getVariableFromCommand());
+    }
+
+    private getVariableFromCommand(): Object {
+        let result ={};
+        Object.keys(cmdEnv).forEach(k => {
+            result[k] = Util.executeBashCommand(cmdEnv[k]).replace('\n', '');
+        });
+
+        return result;
     }
 
     createTempDockerFiles(): void {

@@ -6,10 +6,7 @@
     "sourceMap": true,
     "target": "es6",
     "resolveJsonModule": true,
-<<<<<<< HEAD
-=======
     "esModuleInterop": true,
->>>>>>> got rid of katsu part
     "outDir": "./dist"
   },
   "types": [

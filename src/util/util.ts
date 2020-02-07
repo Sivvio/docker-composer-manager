@@ -1,8 +1,5 @@
 import * as process from 'child_process';
-<<<<<<< HEAD
-=======
 import * as fs from 'fs';
->>>>>>> got rid of katsu part
 
 export class Util{
     /**
@@ -30,13 +27,10 @@ export class Util{
         console.debug(`Running script: ${fileName}, with args: ${args}`)
         return process.execFile(fileName, args);
      }
-<<<<<<< HEAD
-=======
 
      static tailLogsToFile(fileName: string, process: process.ChildProcess ) {
         const fileLogName = fileName + '.log';
         const logStream = fs.createWriteStream(fileLogName, { flags: 'a' });
         process.stdout.pipe(logStream); //attaching the output of the child console to a file
      }
->>>>>>> got rid of katsu part
 }

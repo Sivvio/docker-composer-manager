@@ -1,16 +1,11 @@
 {
-  "name": "katsu-script-manager",
+  "name": "docker-composer-manager",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/app.js",
+  "main": "src/app.js",
   "scripts": {
     "build": "tsc",
-<<<<<<< HEAD
     "start": "npm run build && node dist/app.js"
-=======
-    "start": "npm run build && node dist/app.js",
-    "package": "npm run build && zip -r katsu-script-manager.zip dist"
->>>>>>> got rid of katsu part
   },
   "author": "Silvio Piccolo",
   "license": "ISC",

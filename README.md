@@ -1,3 +1,4 @@
+
 # Docker Compose Manager
 A simple tool that allows management of docker.
 
@@ -37,11 +38,24 @@ Create and navigate to the folder `config/docker-compose/` at root level and add
     - HOST=localhost
     - PORT=0000
 ```
-####  Adding variables to the .env file 
- In the `.env` you can add variables that you wish the program to read from your docker-compose files. For example
+####  Adding variables for the docker compose files
+Navigate to the folder config/variables and create 2 files:
+
+```bash
+$ touch cmd-env.json
+$ touch env.json
 ```
-#inside .env
-MY-DOCKER-PORT=0000
+The `env.json` sets static docker compose files variables e.g.
+```json
+{
+	"MY-DOCKER-PORT":"0000"
+}
+```
+The `cmd.json` sets variables that are returned by a predefined script:
+```json
+{
+	"HOSTNAME":"hostname" //linux command returns the hostname of your machine e.g. c-61-123-45-67.hsd1.co.comcast.net
+}
 ```
 
 #### Adding variables to the docker-compose
@@ -51,9 +65,11 @@ ${MY_VAR}
 ```
 Using the previous example: 
 
-```bash
-#inside .env
-MY-DOCKER-PORT=0000
+```json
+#inside cmd.json
+{
+	"MY-DOCKER-PORT":"0000"
+}
 ```
 
 ```yaml
@@ -76,7 +92,7 @@ MY-DOCKER-PORT=0000
 $ npm start
 ```
 
-Launch a web browser at `http://localhost:3001` 
+Launch a web browser at `http://localhost:3000` 
 
 ## Output
 

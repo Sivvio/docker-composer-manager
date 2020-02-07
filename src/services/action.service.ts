@@ -34,8 +34,15 @@ export class ActionService {
         // set the services to be active for the UI
         this.applicationStatus.commands.cmd.forEach(c => {
             this.applicationStatus.runningImages.forEach((value) => {
-                if (c.serviceName === value) {
-                    c.active = true;
+                //performing a docker ps on the specific instance to check if it actually got started
+                const psOutput:string = Util.executeBashCommand('docker ps --filter name=' + c.serviceName);
+                let psOutputArray:string[] = psOutput.split(" ");
+                psOutputArray = psOutputArray.filter(out => out.trim() === c.serviceName);
+
+                if (c.serviceName === value && psOutputArray.length === 1) {
+                     c.active = true;
+                } else {
+                    c.active = false;
                 }
             });
         });

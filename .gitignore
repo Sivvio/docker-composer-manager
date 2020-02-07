@@ -29,4 +29,8 @@ hs_err_pid*
 /node_modules/
 /config/docker-compose/*.yml
 /.env
+<<<<<<< HEAD
 /dist
+=======
+/dist
+>>>>>>> got rid of katsu part

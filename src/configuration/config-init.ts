@@ -1,9 +1,7 @@
 import * as fs from 'fs-extra';
-import {ActionService} from "../services/action.service";
 import {ApplicationStatus} from "../models/application-status";
 import * as dotenv from 'dotenv';
 import {Util} from '../util/util';
-import { ActiveService } from '../models/active-service';
 
 
 export class ConfigInit {
@@ -18,10 +16,10 @@ export class ConfigInit {
             fs.removeSync(this.applicationStatus.config.tempFolder);
         }
         fs.mkdirSync(this.applicationStatus.config.tempFolder);
+
         this.applicationStatus.config.environmentVariables = this.buildConfigVariables();
         this.createTempDockerFiles();
         this.applicationStatus.config.commandsList = this.createDockerCommand();
-        this.applicationStatus.scriptsNames = this.findScripts();
     }
 
     /**
@@ -35,7 +33,7 @@ export class ConfigInit {
     }
 
     createTempDockerFiles(): void {
-        setTimeout(() => fs.mkdirSync(this.applicationStatus.config.logsFolder), 0); //creating the logs folder
+        setTimeout(() => fs.mkdirSync(this.applicationStatus.config.dockerLogsFolder), 0); //creating the logs folder
 
         const files = fs.readdirSync(this.applicationStatus.config.dockerComposeFolder);
 
@@ -71,7 +69,7 @@ export class ConfigInit {
             contents = contents
                 .filter(c => c.includes('container_name'))
                 .map(c => c.slice(c.search(':') + 1, c.length).replace('"', '').trim())
-                .map(c => 'docker-compose -f ' + __dirname + '/../../~tmp/' + file + ' up ' + c);
+                .map(c => 'docker-compose -f ' + this.applicationStatus.config.tempFolder + file + ' up ' + c);
 
             // delete duplicates
             contents.forEach((c) => commandListSet.add(c));
@@ -85,12 +83,5 @@ export class ConfigInit {
         commandList.forEach((value, key) => this.applicationStatus.commands.cmd.push({serviceName: key, active: false}));
         
         return commandList;
-    }
-
-
-    public findScripts(): string[] {
-        const files: string[] = fs.readdirSync(this.applicationStatus.config.scriptsFolder, 'utf8');
-        const filteredFiles = files.filter(f => f.includes('.bash') || f.includes('.bat'));
-        return filteredFiles;
     }
 }

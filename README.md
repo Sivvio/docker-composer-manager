@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Katsu Script Manager
 A simple automation tool that allows scripts to be configured and executed based on HTTP events.
 
@@ -8,6 +9,10 @@ Our mantra is: *Focus on the solution, not in the tooling*.
 
 ### Origin of the name
 The name was inspired by the team's favorite meal: The famous chicken katsu by ***** (venue's name ommited since they are not paying anything to us neither giving us free meals!).
+=======
+# Docker Compose Manager
+A simple tool that allows management of docker.
+>>>>>>> got rid of katsu part
 
 # Configure the workspace
 
@@ -98,10 +103,17 @@ Launch a web browser at `http://localhost:3001`
 ## Output
 
 ### tmp folder
+<<<<<<< HEAD
 A `~tmp` folder will be generated with parsed yml files replacing all the .env variables. The program will read from those files, do not delete this folder while the program is running. Each time the program starts the folder is deleted and recreated. 
 
 ### logs
 Under the `~tmp` folder a `logs` folder will be created, the output of each docker will be dumped into a a file inside this folder
+=======
+A `~tmp-docker` folder will be generated with parsed yml files replacing all the .env variables. The program will read from those files, do not delete this folder while the program is running. Each time the program starts the folder is deleted and recreated. 
+
+### logs
+Under the `~tmp-docker` folder a `logs` folder will be created, the output of each docker will be dumped into a a file inside this folder
+>>>>>>> got rid of katsu part
 
 ## Stopping the application
 Since each docker is run via a child process of the application, once the app stops, all the dockers will be brought down as well

@@ -5,7 +5,12 @@
   "main": "dist/app.js",
   "scripts": {
     "build": "tsc",
+<<<<<<< HEAD
     "start": "npm run build && node dist/app.js"
+=======
+    "start": "npm run build && node dist/app.js",
+    "package": "npm run build && zip -r katsu-script-manager.zip dist"
+>>>>>>> got rid of katsu part
   },
   "author": "Silvio Piccolo",
   "license": "ISC",

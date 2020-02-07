@@ -19,12 +19,19 @@ export class ActionService {
 
         commandsToPerform.forEach((c) => {
             const serviceName = c.slice(c.lastIndexOf(' ') + 1);
+<<<<<<< HEAD
             const fileLogName = this.applicationStatus.config.logsFolder + serviceName + '.log';
             const logStream = fs.createWriteStream(fileLogName, { flags: 'a' });
 
             const runningServiceProcess = Util.spawn(c);
 
             runningServiceProcess.stdout.pipe(logStream); //attaching the output of the child console to a file
+=======
+            const fileLogName = this.applicationStatus.config.dockerLogsFolder + serviceName;
+            const runningServiceProcess = Util.spawn(c);
+
+            Util.tailLogsToFile(fileLogName, runningServiceProcess);
+>>>>>>> got rid of katsu part
 
             //saving the process into a map, we can kill the process on altImages
             this.applicationStatus.runningServicesProcesses.set(serviceName, runningServiceProcess);
@@ -46,7 +53,11 @@ export class ActionService {
 
     altImages(serviceName): void {
 
+<<<<<<< HEAD
         const fileLogName = this.applicationStatus.config.logsFolder + serviceName + '.log';
+=======
+        const fileLogName = this.applicationStatus.config.dockerLogsFolder + serviceName + '.log';
+>>>>>>> got rid of katsu part
 
         const runningInstance = this.applicationStatus.runningServicesProcesses.get(serviceName);
 
@@ -66,6 +77,7 @@ export class ActionService {
 
         setTimeout(() => fs.appendFileSync(fileLogName, 'PROCESS TERMINATED'), 0);
     }
+<<<<<<< HEAD
 
     runScript(scriptName: string, args?: string[] ): boolean {
         
@@ -90,4 +102,6 @@ export class ActionService {
         }
         return false;
     }
+=======
+>>>>>>> got rid of katsu part
 }

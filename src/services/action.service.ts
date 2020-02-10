@@ -32,7 +32,7 @@ export class ActionService {
                     let error: Map<string, string> = new Map<string, string>();
 
                     runningServiceProcess.stderr.on("data", (data) => {
-                        errorMsg += data.toString() + '\n';
+                        errorMsg += data.toString();
                     });
 
                     runningServiceProcess.stderr.on("end", (data) => {

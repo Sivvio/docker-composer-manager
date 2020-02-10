@@ -7,49 +7,70 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        .odd-colours:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .custom-row {
+            padding: 10px 0 10px 0;
+        }
+
+        .custom-container{
+            margin: 50px 0 50px 0;
+        }
+    </style>
 </head>
 
 <body>
     <div class="container">
         <form method="POST" action="/spin-up-image">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Container name</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each cmd}}
-                    <tr>
 
-                        <td>
-                            <input type="checkbox" name="{{this}}" value="{{this.serviceName}}">
-                            {{this.serviceName}}<br>
-                        </td>
-                        <td>
-                            {{#if this.active}}
-                            <a "/read-logs/{{this.serviceName}}" action="/read-logs/{{this.serviceName}}"
-                                class="btn btn-info btn-sm">
-                                <span class="glyphicon glyphicon-list-alt"></span> Logs
-                            </a>
+            <div class="container-fluid custom-container">
+                <div class="row" style="border-bottom: 2px solid #ddd;">
+                    <div class="col-md-6">
+                        <h4><b>Container name</b></h4>
+                    </div>
+                    <div class="col-md-6">
+                        <h4><b>Actions</b></h4>
+                    </div>
+                </div>
+                {{#each cmd}}
+                <div class="row odd-colours custom-row">
+                    <div class="col-md-6">
+                        <input type="checkbox" name="{{this}}" value="{{this.serviceName}}">
+                        {{this.serviceName}}<br>
+                    </div>
+                    <div class="col-md-6">
+                        {{#if this.active}}
+                        <a "/read-logs/{{this.serviceName}}" action="/read-logs/{{this.serviceName}}"
+                            class="btn btn-info btn-sm">
+                            <span class="glyphicon glyphicon-list-alt"></span> Logs
+                        </a>
 
-                            <a href="/alt-service/{{this.serviceName}}" class="btn btn-danger btn-sm" onclick="changeStopLabelToStopping('{{this.serviceName}}')">
-                                <span class="glyphicon glyphicon-stop"></span> <span id="{{this.serviceName}}">Stop</span> 
-                            </a>
-                            {{/if}}
-                        </td>
+                        <a href="/alt-service/{{this.serviceName}}" class="btn btn-danger btn-sm"
+                            onclick="changeStopLabelToStopping('{{this.serviceName}}')">
+                            <span class="glyphicon glyphicon-stop"></span> <span id="{{this.serviceName}}">Stop</span>
+                        </a>
+                        {{/if}}
+                    </div>
 
-                    </tr>
-                    {{/each}}
-                </tbody>
-            </table>
+                </div>
+                {{#if this.errorMessage}}
+                <div class="row">
+                    <div class="alert alert-danger">
+                        {{this.errorMessage}}
+                    </div>
+                </div>
+                {{/if}}
+
+                {{/each}}
+            </div>
 
             <button type="submit" class="btn btn-default">Execute</button>
 
         </form>
     </div>
-
 
     <script>
         function changeStopLabelToStopping(label) {

@@ -83,7 +83,7 @@ export class ConfigInit {
         console.log(commandList);
 
         // pushing the commands list to the status class
-        commandList.forEach((value, key) => this.applicationStatus.commands.cmd.push({serviceName: key, active: false}));
+        commandList.forEach((value, key) => this.applicationStatus.commands.cmd.push({serviceName: key, active: false, errorMessage: null}));
         
         return commandList;
     }

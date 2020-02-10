@@ -23,10 +23,7 @@ server.get('/', (req, res) => {
 });
 
 server.post('/spin-up-image', (req, res) => {
-    actionService.spinUpImages(req.body);
-
-    res.render('overview', applicationStatus.commands);
-
+    actionService.spinUpImages(req.body).then(() => res.render('overview', applicationStatus.commands));
 });
 
 // app.get('/read-logs/:serviceName', (req, res) => {

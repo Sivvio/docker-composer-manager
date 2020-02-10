@@ -65,6 +65,7 @@ export class ActionService {
 
                     if (c.serviceName === value && psOutputArray.length === 1) {
                         c.active = true;
+                        c.errorMessage = null;
                         resolve();
                     } else if (c.serviceName === value) {
                         Promise.all(errorPromises)

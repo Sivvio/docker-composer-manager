@@ -1,7 +1,9 @@
 import * as fs from 'fs';
 import { ApplicationStatus } from "../models/application-status";
 import { Util } from '../util/util';
-
+import { io } from './../app';
+import { setImmediate } from 'timers';
+var Tail = require('always-tail');
 export class ActionService {
 
     constructor(private applicationStatus: ApplicationStatus) { }
@@ -73,7 +75,7 @@ export class ActionService {
                                 c.active = false;
                                 array.forEach(el => {
                                     let err = el ? el.get(c.serviceName) : null;
-                                    if(err) {
+                                    if (err) {
                                         c.errorMessage = err;
                                     }
                                 });
@@ -108,5 +110,22 @@ export class ActionService {
         this.applicationStatus.commands.cmd[imageIdx].active = false;
 
         setTimeout(() => fs.appendFileSync(fileLogName, 'PROCESS TERMINATED'), 0);
+    }
+
+
+    streamLogs(serviceName: string) {
+
+        const fileLogName = this.applicationStatus.config.dockerLogsFolder + serviceName + '.log';
+
+        const tail = Util.spawnWithOpts('tail', ['-f', fileLogName]);
+
+            tail.stdout.on('data', function (chunk) {
+                if(chunk) {
+                    setTimeout(() => io.emit('log-stream', chunk.toString('utf-8')), 600)
+                    ;
+                }
+            });
+
+        return io;
     }
 }

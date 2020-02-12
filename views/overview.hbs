@@ -16,7 +16,7 @@
             padding: 10px 0 10px 0;
         }
 
-        .custom-container{
+        .custom-container {
             margin: 50px 0 50px 0;
         }
     </style>
@@ -43,10 +43,12 @@
                     </div>
                     <div class="col-md-6">
                         {{#if this.active}}
-                        <a "/read-logs/{{this.serviceName}}" action="/read-logs/{{this.serviceName}}"
-                            class="btn btn-info btn-sm">
+                        <a href="/read-logs/{{this.serviceName}}" target="blank" class="btn btn-info btn-sm">
                             <span class="glyphicon glyphicon-list-alt"></span> Logs
                         </a>
+                        {{!-- <a href="./logs.hbs" action="/read-logs/{{this.serviceName}}" target="blank" class="btn btn-info btn-sm">
+                            <span class="glyphicon glyphicon-list-alt"></span> Logs
+                        </a> --}}
 
                         <a href="/alt-service/{{this.serviceName}}" class="btn btn-danger btn-sm"
                             onclick="changeStopLabelToStopping('{{this.serviceName}}')">
@@ -73,17 +75,30 @@
     </div>
 
     <script>
-        if(window.location.pathname != '/') {
+
+        if (window.location.pathname != '/') {
             window.location.href = "/";
-            setTimeout(()=> location.reload(), 100);
+            setTimeout(() => location.reload(), 100);
         }
-         
 
         function changeStopLabelToStopping(label) {
             document.getElementById(label).innerHTML = "Stopping...";
         }
     </script>
 
+
+    {{!-- <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        socket.on('log-stream', chunk => {
+            const p = document.createElement("P");  
+            const node = document.createTextNode(chunk);
+            p.appendChild(node);  
+            const container = document.getElementById('terminal-container');
+            container.appendChild(p);
+        });
+    </script> --}}
 </body>
 
 </html>

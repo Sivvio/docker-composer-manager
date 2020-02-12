@@ -6,36 +6,42 @@ import bodyParser from 'body-parser';
 import {ApplicationStatus} from "./models/application-status";
 import {ActionService} from "./services/action.service";
 import {ConfigInit} from "./configuration/config-init";
+import http from 'http';
+import path from 'path';
 
-const server = express();
+const app = express();
 const port = process.env.PORT || 3000 ;
+const server = http.createServer(app);
 
-server.set('view engine', 'hbs');
-server.use(bodyParser.urlencoded({ extended: true }));
-server.use(bodyParser.json());
+app.set('view engine', 'hbs');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use('/static', express.static('node_modules')); //exposing node_modules for socket
+app.use('/public', express.static(path.join(__dirname, '../../public')));
+
+export const io = require('socket.io').listen(server);
+
 
 export const applicationStatus: ApplicationStatus = new ApplicationStatus();
 export const actionService: ActionService = new ActionService(applicationStatus);
 new ConfigInit(applicationStatus);
 
-server.get('/', (req, res) => {
+app.get('/', (req, res) => {
     res.render('overview', applicationStatus.commands);
 });
 
-server.post('/spin-up-image', (req, res) => {
+app.post('/spin-up-image', (req, res) => {
     actionService.spinUpImages(req.body).then(() => res.render('overview', applicationStatus.commands));
 });
 
-// app.get('/read-logs/:serviceName', (req, res) => {
-//     const fileLogName = config.dockerLogsFolder + req.params.serviceName + '.log';
-//     const tail = spawn('tail', ['-f', fileLogName]);
+app.get('/read-logs/:serviceName', (req, res) => {
+    
+    actionService.streamLogs(req.params.serviceName);
+    res.status(200);
+    res.sendFile(path.resolve(__dirname + '/../../views/logs.html'))
+});
 
-//     tail.stdout.on('data', function (data) {
-//         res.write('' + data);
-//     });
-// });
-
-server.get('/alt-service/:serviceName', (req, res) => {
+app.get('/alt-service/:serviceName', (req, res) => {
     const serviceName = req.params.serviceName;
     actionService.altImages(serviceName);
 

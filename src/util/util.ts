@@ -17,6 +17,10 @@ export class Util{
         });
     }
 
+    static spawnWithOpts(command: string, opts): process.ChildProcess {
+        return process.spawn(command, opts);
+    }
+
     static spawnSync(command: string): process.SpawnSyncReturns<Buffer> {
         return process.spawnSync(command, {
              shell: true

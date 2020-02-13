@@ -34,9 +34,9 @@ app.post('/spin-up-image', (req, res) => {
     actionService.spinUpImages(req.body).then(() => res.render('overview', applicationStatus.commands));
 });
 
-app.get('/read-logs/:serviceName', (req, res) => {
+app.get('/tail-logs/:serviceName', (req, res) => {
     
-    actionService.streamLogs(req.params.serviceName);
+    actionService.tailLogs(req.params.serviceName);
     res.status(200);
     res.sendFile(path.resolve(__dirname + '/../../views/logs.html'))
 });

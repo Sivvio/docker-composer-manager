@@ -43,12 +43,9 @@
                     </div>
                     <div class="col-md-6">
                         {{#if this.active}}
-                        <a href="/read-logs/{{this.serviceName}}" target="blank" class="btn btn-info btn-sm">
+                        <a href="/tail-logs/{{this.serviceName}}" target="blank" class="btn btn-info btn-sm">
                             <span class="glyphicon glyphicon-list-alt"></span> Logs
                         </a>
-                        {{!-- <a href="./logs.hbs" action="/read-logs/{{this.serviceName}}" target="blank" class="btn btn-info btn-sm">
-                            <span class="glyphicon glyphicon-list-alt"></span> Logs
-                        </a> --}}
 
                         <a href="/alt-service/{{this.serviceName}}" class="btn btn-danger btn-sm"
                             onclick="changeStopLabelToStopping('{{this.serviceName}}')">
@@ -86,19 +83,6 @@
         }
     </script>
 
-
-    {{!-- <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io();
-
-        socket.on('log-stream', chunk => {
-            const p = document.createElement("P");  
-            const node = document.createTextNode(chunk);
-            p.appendChild(node);  
-            const container = document.getElementById('terminal-container');
-            container.appendChild(p);
-        });
-    </script> --}}
 </body>
 
 </html>

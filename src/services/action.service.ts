@@ -2,8 +2,7 @@ import * as fs from 'fs';
 import { ApplicationStatus } from "../models/application-status";
 import { Util } from '../util/util';
 import { io } from './../app';
-import { setImmediate } from 'timers';
-var Tail = require('always-tail');
+const Tail = require('tail').Tail;
 export class ActionService {
 
     constructor(private applicationStatus: ApplicationStatus) { }
@@ -113,19 +112,32 @@ export class ActionService {
     }
 
 
-    streamLogs(serviceName: string) {
+    tailLogs(serviceName: string, fullLogs = false):void {
 
         const fileLogName = this.applicationStatus.config.dockerLogsFolder + serviceName + '.log';
+        let tail;
+        var options = { separator: /[\r]{0,1}\n/, fromBeginning: fullLogs, fsWatchOptions: {}, follow: true, logger: console, useWatchFile: true }
 
-        const tail = Util.spawnWithOpts('tail', ['-f', fileLogName]);
 
-            tail.stdout.on('data', function (chunk) {
-                if(chunk) {
-                    setTimeout(() => io.emit('log-stream', chunk.toString('utf-8')), 600)
-                    ;
-                }
-            });
+        try {
+            tail = new Tail(fileLogName, options);
+        } catch (e) {
+            console.log(e);
+        }
 
-        return io;
+
+        tail.on('line', (chunk) => {
+            if (chunk) {
+                setTimeout(() => io.emit('log-stream', chunk), 100);
+            }
+        });
+        tail.on('error', (err) => {
+            console.log(err);
+        });
+
+    }
+
+    streamFullLogs(serviceName: string):void {
+        this.tailLogs(serviceName, true);
     }
 }

@@ -13,9 +13,10 @@ socket.on('log-stream', chunk => {
 });
 
 setInterval(() => {
-    if (currentLogLength > lastUpdatedLogLength) {
-        formattedArr.forEach(line => {
+    if (currentLogLength >= lastUpdatedLogLength) {
 
+        for (let i = lastUpdatedLogLength; i <= currentLogLength; i++) {
+            let line = formattedArr[i];
             if (line) {
                 //formatting
                 line = line.replace(//g, "");
@@ -39,11 +40,8 @@ setInterval(() => {
                 const container = document.getElementById('terminal-container');
                 container.appendChild(div);
             }
-
-
-        });
+        }
+        lastUpdatedLogLength = currentLogLength;
     }
-
-    lastUpdatedLogLength = currentLogLength;
-}, 500);
+}, 100);
 

@@ -46,7 +46,7 @@ export class ActionService {
                 });
 
                 //@ts-ignore
-                errorPromises.push(errorPromise)
+                errorPromises.push(errorPromise);
 
                 //saving the process into a map, we can kill the process on altImages
                 this.applicationStatus.runningServicesProcesses.set(serviceName, runningServiceProcess);
@@ -58,30 +58,35 @@ export class ActionService {
             // set the services to be active for the UI
             this.applicationStatus.commands.cmd.forEach(c => {
                 this.applicationStatus.runningImages.forEach((value) => {
-
-                    //performing a docker ps on the specific instance to check if it actually got started
-                    const psOutput: string = Util.executeBashCommand('docker ps --filter name=' + c.serviceName);
-                    let psOutputArray: string[] = psOutput.split(" ");
-                    psOutputArray = psOutputArray.filter(out => out.trim() === c.serviceName);
-
-                    if (c.serviceName === value && psOutputArray.length === 1) {
+                    if (c.serviceName === value) {
                         c.active = true;
-                        c.errorMessage = null;
-                        resolve();
-                    } else if (c.serviceName === value) {
-                        Promise.all(errorPromises)
-                            .then(array => {
-                                c.active = false;
-                                array.forEach(el => {
-                                    let err = el ? el.get(c.serviceName) : null;
-                                    if (err) {
-                                        c.errorMessage = err;
-                                    }
-                                });
-                                resolve();
-                            })
-                            .catch(err => console.log(err))
+
                     }
+                    resolve();
+                    //@TODO improve this bit, until then commented out
+                    //performing a docker ps on the specific instance to check if it actually got started
+                    // const psOutput: string = Util.executeBashCommand('docker ps --filter name=' + c.serviceName);
+                    // let psOutputArray: string[] = psOutput.split(" ");
+                    // psOutputArray = psOutputArray.filter(out => out.trim() === c.serviceName);
+                    //
+                    // if (c.serviceName === value && psOutputArray.length === 1) {
+                    //     c.active = true;
+                    //     c.errorMessage = null;
+                    //     resolve();
+                    // } else if (c.serviceName === value) {
+                    //     Promise.all(errorPromises)
+                    //         .then(array => {
+                    //             c.active = false;
+                    //             array.forEach(el => {
+                    //                 let err = el ? el.get(c.serviceName) : null;
+                    //                 if (err) {
+                    //                     c.errorMessage = err;
+                    //                 }
+                    //             });
+                    //             resolve();
+                    //         })
+                    //         .catch(err => console.log(err))
+                    // }
                 });
 
             });

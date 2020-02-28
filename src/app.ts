@@ -8,6 +8,7 @@ import {ActionService} from "./services/action.service";
 import {ConfigInit} from "./configuration/config-init";
 import http from 'http';
 import path from 'path';
+import process from 'process';
 
 const app = express();
 const port = process.env.PORT || 3000 ;
@@ -49,3 +50,16 @@ app.get('/alt-service/:serviceName', (req, res) => {
 });
 
 server.listen(port, () => console.log(`Microservices server started on port ${port}`));
+
+//dealing with process kill
+process.on('SIGINT', () => {
+    applicationStatus.commands.cmd.forEach(service => {
+        console.log('stopping service: ' + service.serviceName);
+        if(service.active) {
+            actionService.altImages(service.serviceName);
+        }
+        console.log('successfully stopped service: ' + service.serviceName);
+    });
+    console.log('Successfully stopped all services, terminating server');
+    process.exit();
+});

@@ -1,8 +1,10 @@
 import * as fs from 'fs';
 import { ApplicationStatus } from "../models/application-status";
 import { Util } from '../util/util';
-import { io } from './../app';
+import { Socket } from 'socket.io';
 const Tail = require('tail').Tail;
+
+
 export class ActionService {
 
     constructor(private applicationStatus: ApplicationStatus) { }
@@ -60,7 +62,6 @@ export class ActionService {
                 this.applicationStatus.runningImages.forEach((value) => {
                     if (c.serviceName === value) {
                         c.active = true;
-
                     }
                     resolve();
                     //@TODO improve this bit, until then commented out
@@ -116,33 +117,30 @@ export class ActionService {
         setTimeout(() => fs.appendFileSync(fileLogName, 'PROCESS TERMINATED'), 0);
     }
 
-
-    tailLogs(serviceName: string, fullLogs = false):void {
-
-        const fileLogName = this.applicationStatus.config.dockerLogsFolder + serviceName + '.log';
-        let tail;
-        var options = { separator: /[\r]{0,1}\n/, fromBeginning: fullLogs, fsWatchOptions: {}, follow: true, logger: console, useWatchFile: true }
-
-
-        try {
-            tail = new Tail(fileLogName, options);
-        } catch (e) {
-            console.log(e);
-        }
-
-
-        tail.on('line', (chunk) => {
-            if (chunk) {
-                setTimeout(() => io.emit('log-stream', chunk), 100);
+    tailLogs(serviceName: string, socket: Socket, fullLogs = false): void {
+            const fileLogName = this.applicationStatus.config.dockerLogsFolder + serviceName + '.log';
+            let tail;
+            var options = { separator: /[\r]{0,1}\n/, fromBeginning: fullLogs, fsWatchOptions: {}, follow: true, useWatchFile: true }
+    
+            try {
+                tail = new Tail(fileLogName, options);
+                this.applicationStatus.runningTails.set(socket.id, { tail: tail, isFull: fullLogs });
+            } catch (e) {
+                console.log(e);
             }
-        });
-        tail.on('error', (err) => {
-            console.log(err);
-        });
-
+    
+            tail.on('line', (chunk) => {
+                if (chunk) {
+                    socket.emit('log-stream', chunk);
+                }
+            });
+    
+            tail.on('error', (err) => {
+                console.log(err);
+            });      
     }
 
-    streamFullLogs(serviceName: string):void {
-        this.tailLogs(serviceName, true);
+    streamFullLogs(serviceName: string, socket: Socket): void {
+        this.tailLogs(serviceName, socket, true);
     }
 }

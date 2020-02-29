@@ -1,11 +1,19 @@
 <!DOCTYPE html>
-<html style="background-color: #141518;">
+<html>
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <style>
+        html,
+        body {
+            background-color: #141518;
+        }
+
         #terminal-container {
             color: #f2f2f2;
             font-family: monospace;
@@ -15,10 +23,20 @@
             line-height: 25px;
             display: contents;
         }
+
+        .full-logs-btn {
+            position: fixed;
+            right: 16px;
+            top: 16px;
+        }
     </style>
 </head>
 
 <body>
+    <a id="full-logs" class="btn btn-default btn-sm full-logs-btn" onclick="loadFullLogs();" >
+        Full logs
+    </a>
+
 
     <div id="terminal-container">
 
@@ -26,10 +44,7 @@
 
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="../../public/javascript/logs.js">
-
-    </script>
-
+    <script src="../../public/javascript/logs.js"></script>
 </body>
 
 </html>

@@ -1,13 +1,21 @@
-const socket = io();
+const skt = io();
 
 let currentLogLength = 0;
 let lastUpdatedLogLength = 0;
 let formattedArr = [];
 
+let autoScroll;
 
-socket.on('log-stream', chunk => {
+// if the path is not full then just append else request full log
+if(window.location.href.search('/full') === -1) {
+    skt.emit('request-log',  window.location.href.split('/')[4]);
+} else {
+    skt.emit('request-full-log',  window.location.href.split('/')[4]);
+}
+
+
+skt.on('log-stream', chunk => {
     let split = chunk.split('\n');
-
     formattedArr = formattedArr.concat(split);
     currentLogLength = formattedArr.length;
 });
@@ -39,9 +47,25 @@ setInterval(() => {
                 div.appendChild(textLine);
                 const container = document.getElementById('terminal-container');
                 container.appendChild(div);
+
+                div.scrollTop = div.scrollHeight; // autoscroll
             }
         }
+
         lastUpdatedLogLength = currentLogLength;
     }
 }, 100);
 
+autoScrollEnabled(); //auto scroll by default
+
+function autoScrollEnabled() {
+    autoScroll = setInterval(() => {
+        window.scrollBy(0, 1000);
+    }, 100);
+}
+
+function loadFullLogs() {
+    if(window.location.href.search('/full') === -1) {
+        window.location.href += "/full"
+    }
+}
